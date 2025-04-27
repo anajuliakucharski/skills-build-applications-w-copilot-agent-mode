@@ -1,21 +1,32 @@
 from django.core.management.base import BaseCommand
-import pymongo
-from octofit_tracker.test_data import users, teams, activity, leaderboard, workouts
+from octofit_tracker import test_data
+from octofit_tracker.models import User, Team, Activity, Leaderboard, Workout
 
 class Command(BaseCommand):
-    help = 'Popula o banco de dados octofit_db com dados de teste.'
+    help = 'Popula o banco de dados MongoDB com dados de teste.'
 
-    def handle(self, *args, **kwargs):
-        client = pymongo.MongoClient('localhost', 27017)
-        db = client['octofit_db']
-        db.users.delete_many({})
-        db.teams.delete_many({})
-        db.activity.delete_many({})
-        db.leaderboard.delete_many({})
-        db.workouts.delete_many({})
-        db.users.insert_many(users)
-        db.teams.insert_many(teams)
-        db.activity.insert_many(activity)
-        db.leaderboard.insert_many(leaderboard)
-        db.workouts.insert_many(workouts)
-        self.stdout.write(self.style.SUCCESS('Banco de dados populado com dados de teste.'))
+    def handle(self, *args, **options):
+        # Limpa as coleções antes de inserir
+        User.objects.all().delete()
+        Team.objects.all().delete()
+        Activity.objects.all().delete()
+        Leaderboard.objects.all().delete()
+        Workout.objects.all().delete()
+
+        # Popula usuários
+        for user in test_data.users:
+            User.objects.create(**user)
+        # Popula times
+        for team in test_data.teams:
+            Team.objects.create(**team)
+        # Popula atividades
+        for activity in test_data.activities:
+            Activity.objects.create(**activity)
+        # Popula leaderboard
+        for entry in test_data.leaderboard:
+            Leaderboard.objects.create(**entry)
+        # Popula workouts
+        for workout in test_data.workouts:
+            Workout.objects.create(**workout)
+
+        self.stdout.write(self.style.SUCCESS('Banco de dados populado com sucesso!'))

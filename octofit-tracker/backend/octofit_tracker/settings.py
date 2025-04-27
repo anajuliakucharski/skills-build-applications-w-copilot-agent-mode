@@ -20,7 +20,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-k&$)hlz3gwda1bkpg@7j-aj#texj1w+7)+v3_q8y%#vhhg=z_c"
+SECRET_KEY = "django-insecure-&zj6yvqq$8p-z)gt(t()ky+&#&1f*d=mkz#s_gl*18!xy=$wh@"
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -37,6 +37,9 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "rest_framework",
+    "corsheaders",
+    "octofit_tracker",
 ]
 
 MIDDLEWARE = [
@@ -47,6 +50,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "corsheaders.middleware.CorsMiddleware",
 ]
 
 ROOT_URLCONF = "octofit_tracker.urls"
@@ -74,8 +78,13 @@ WSGI_APPLICATION = "octofit_tracker.wsgi.application"
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+        "ENGINE": "djongo",
+        "NAME": "octofit_db",
+        "ENFORCE_SCHEMA": False,
+        "CLIENT": {
+            "host": "localhost",
+            "port": 27017,
+        },
     }
 }
 
@@ -120,3 +129,8 @@ STATIC_URL = "static/"
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_CREDENTIALS = True
+CORS_ALLOW_HEADERS = ["*"]
+CORS_ALLOW_METHODS = ["*"]
